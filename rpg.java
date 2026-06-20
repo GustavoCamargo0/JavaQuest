@@ -164,9 +164,11 @@ public class rpg {
 
         System.out.printf(" \n Olá %s\n", nome);
         int controlador;
+        int intervalot = 0;
+        int intervalod = 0;
         while (true) {
             System.out.println("----- Controles -----");
-            System.out.println("\n[1] Sair\n [2] Descansar\n [3] Treinar\n [4] Eventos\n [5] Mostrar Status");
+            System.out.println("\n [1] Sair\n [2] Descansar\n [3] Treinar\n [4] Eventos\n [5] Mostrar Status");
             System.out.println("---------------------");
             controlador = Integer.parseInt(System.console().readLine());
 
@@ -174,21 +176,41 @@ public class rpg {
                 case 1:
                     return;
                 case 2:
-
+                    if(intervalod == 0) {
+                    System.out.println("Você descansa e se sente melhor");
+                    personagem.vidaAtual = personagem.vidaAtual + 30;
+                    if (personagem.vidaAtual > personagem.vidaMax) {
+                        personagem.vidaAtual = personagem.vidaMax;
+                    }
+                    intervalod = intervalod + 3;
+                    }
+                    else
+                        System.out.println("Você ainda não pode descansar");
                     break;
                 case 3:
-
+                    if(intervalot == 0) {
+                        System.out.println("Você treina e se sente mais forte");
+                        personagem.pontos = personagem.pontos + 3;
+                        intervalot = intervalot + 3;
+                    }
+                    else
+                        System.out.println("Você ainda não pode treinar");
                     break;
                 case 4:
                     int aleatorio = random.nextInt(encontros.length);
                     String encontroPego = encontros[aleatorio];
                     System.out.println(encontroPego);
+                    if(intervalod > 0){
+                        intervalod = intervalod - 1;
+                    }
+                    if(intervalot > 0){
+                        intervalot = intervalot - 1;
+                    }
                     break;
                 case 5:
                     personagem.mostrarStatus();
                     break;
             }
-
         }
 
     }
