@@ -1,11 +1,20 @@
 import java.util.Random;
-
 import javax.swing.UIManager;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
-
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.JLabel;
+import javax.swing.*;
+import java.awt.FlowLayout;
+import java.awt.CardLayout;
+import java.awt.BorderLayout;
 abstract class Classe {
     String nome;
     int nivel;
@@ -19,6 +28,17 @@ abstract class Classe {
     int pontos;
     Arma armaEquipada;
     ArrayList<Item> inventario = new ArrayList<>();
+
+    void presente_misterioso() {
+        Random random = new Random();
+        int num = random.nextInt();
+        System.out.println(num);
+        if (num >= 50) {
+            System.out.println("parabens vc ganhou");
+        } else {
+            System.out.println("vc perdeu... quer os 2 reais");
+        }
+    }
 
     void mostrarStatus() {
         UIManager.put("OptionPane.background", Color.BLACK); // customizacoes
@@ -82,7 +102,9 @@ abstract class Classe {
                             javax.swing.JOptionPane.ERROR_MESSAGE);
                 }
             }
-            // Pode apagar o código abaixo se for usar a interface gráfica ou se não gostar da interface, é só apagar a de cima, mas ainda faltaria conseguir upar os status pelo terminal
+            // Pode apagar o código abaixo se for usar a interface gráfica ou se não gostar
+            // da interface, é só apagar a de cima, mas ainda faltaria conseguir upar os
+            // status pelo terminal
             System.out.println("---- Status ----");
             System.out.println("Nome: " + nome);
             System.out.println("Nivel: " + nivel); // -100
@@ -152,8 +174,8 @@ abstract class Classe {
                     case 2:
                         inventario.remove(itemEscolhido);
                         System.out.println("Item descartado");
-                    case 3: 
-                    return;
+                    case 3:
+                        return;
                 }
             }
             System.out.println("Pressione Enter para continuar...");
@@ -237,6 +259,7 @@ class Arma extends Item {
         this.raridade = raridade;
     }
 }
+
 class Adaga extends Arma {
     Adaga(String nome, String descricao, int danoEspecifico, String raridade) {
         super(nome, descricao, danoEspecifico, raridade);
@@ -245,6 +268,7 @@ class Adaga extends Arma {
         this.atkVel = 15;
     }
 }
+
 class Espada extends Arma {
     Espada(String nome, String descricao, int danoEspecifico, String raridade) {
         super(nome, descricao, danoEspecifico, raridade);
@@ -298,66 +322,229 @@ class inventario extends Classe {
 }
 
 public class rpg {
-    public static void main(String[] args) {
+
+    private static Classe personagem;
+    private static int intervalod = 0;
+    private static int intervalot = 0;
+
+    public static void criarGui() {
+
+        JFrame frame = new JFrame("Java Game");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 300);
+
+        CardLayout cardLayout = new CardLayout();
+        JPanel painelPrincipal = new JPanel(cardLayout);
+
+        // Tela Criação Personagem
+        JPanel persoCriacao = new JPanel(new FlowLayout());
+        String[] classes = { "Guerreiro", "Arqueiro", "Mago" };
+        JComboBox<String> cla = new JComboBox<>(classes);
+        JLabel msgNome = new JLabel("Nome do personagem");
+        JTextField nome = new JTextField(20);
+        JButton confirmarBtn = new JButton("Criar personagem");
+        persoCriacao.add(new JLabel("Seja bem-vindo ao nosso RPG"));
+        persoCriacao.add(new JLabel("Nome do personagem"));
+        persoCriacao.add(nome);
+        persoCriacao.add(new JLabel("Escolha uma classe"));
+        persoCriacao.add(cla);
+        persoCriacao.add(confirmarBtn);
+// ---------------------------------------------------------------------------
+
+        // TELA PRINCIPAL
+        JPanel telaJogo = new JPanel(new FlowLayout());
+        String[] acoes = { "Descansar", "Treinar", "Eventos", "Mostrar Status", "Inventario" };
+        JComboBox<String> acao = new JComboBox<>(acoes);
+        JButton confirmButton = new JButton("Confirmar");
+        telaJogo.add(acao);
+        telaJogo.add(confirmButton);
         String[] encontros = { "Conversar", "Comprar", "Caçar", "Explorar" };
         Random random = new Random();
 
-        System.out.println("Seja Bem-vindo ao nosso RPG");
-        System.out.println("---------------------------");
-
-        System.out.println("Escolha Sua Classe");
-        System.out.println("Escolha Sua Classe:\n[1] Guerreiro\n[2] Arqueiro\n[3] Mago\n");
-        int escolha = Integer.parseInt(System.console().readLine());
-
-        System.out.println("Digite o nome do personagem");
-        String nome = System.console().readLine();
-
-        Classe personagem = null;
-
-        switch (escolha) {
-            case 1:
-                personagem = new Guerreiro(nome);
-                break;
-            case 2:
-                personagem = new Arqueiro(nome);
-                break;
-            case 3:
-                personagem = new Mago(nome);
-                break;
-        }
-
-        System.out.printf(" \n Olá %s\n", nome);
-        int controlador;
-        while (true) {
-            System.out.println("----- Controles -----");
-            System.out.println(
-                    "\n[1] Sair\n [2] Descansar\n [3] Treinar\n [4] Eventos\n [5] Mostrar Status\n [6] Inventário");
-            System.out.println("---------------------");
-            controlador = Integer.parseInt(System.console().readLine());
-
-            switch (controlador) {
-                case 1:
-                    return;
-                case 2:
-
+        confirmButton.addActionListener(e -> {
+            String acaoEscolhida = (String) acao.getSelectedItem();
+            switch (acaoEscolhida) {
+                case "Descansar":
+                    if (intervalod == 0) {
+                        JOptionPane.showMessageDialog(frame, "Você descansa e se sente melhor\n você curou 30 de vida");
+                        personagem.vidaAtual = personagem.vidaAtual + 30;
+                        if (personagem.vidaAtual > personagem.vidaMax) {
+                            personagem.vidaAtual = personagem.vidaMax;
+                        }
+                        intervalod = intervalod + 3;
+                    } else
+                         JOptionPane.showMessageDialog(frame,
+                                "Você ainda não pode descansar\n turnos restantes para descansar:" + intervalod);
                     break;
-                case 3:
-
-                    break;
-                case 4:
-                    int aleatorio = random.nextInt(encontros.length);
-                    String encontroPego = encontros[aleatorio];
-                    System.out.println(encontroPego);
-                    break;
-                case 5:
+                case "Mostrar Status":
                     personagem.mostrarStatus();
                     break;
-                case 6:
-                    personagem.mostrarInventario();
+
+                case "Treinar":
+                    if (intervalot == 0) {
+                        JOptionPane.showMessageDialog(frame,
+                                "Você treina e se sente mais forte");
+                        personagem.pontos = personagem.pontos + 3;
+                        intervalot = intervalot + 3;
+                    } else
+                        JOptionPane.showMessageDialog(frame,
+                                "Você ainda não pode treinar");
                     break;
+
+                case "Inventario":
+                    System.out.println("em progresso ainda!");
+                    break;
+                case "Eventos":
+                    int aleatorio = random.nextInt(encontros.length);
+                    String encontroPego = encontros[aleatorio];
+                    JOptionPane.showMessageDialog(frame,
+                                encontroPego);
+                    if (intervalod > 0) {
+                    intervalod = intervalod - 1;
+                    break;
+            }   
+    }});
+// ---------------------------------------------------------------------------
+        JLabel mensagemApresentacao = new JLabel();
+        telaJogo.add(mensagemApresentacao);
+
+
+        // painel Invetário
+
+       JPanel painelInventario = new JPanel(new GridLayout(0, 1, 5, 5));
+        for (Item item : personagem.inventario) {
+            String itemBotao = "";
+
+            if (item instanceof Arma) {
+                Arma arma = (Arma) item;
+                if (arma == personagem.armaEquipada) {
+                    itemBotao = "(Equipado) " + arma.nome + " - " + "(Dano: " + arma.dano + " peso: " + arma.peso + "kg" + " Raridade: " + arma.raridade + ") ";
+                } else {
+                    itemBotao = arma.nome + " - " + "(Dano: " + arma.dano + " peso: " + arma.peso + "kg" + " Raridade: " + arma.raridade + ")";
+                }
+
+                JButton itemBtn = new JButton(itemBotao);
+
+                // itemBtn.addActionListener(e -> {})
+                }
             }
-
         }
+// ---------------------------------------------------------------------------
 
+        // coisas do painel principal
+        // painelPrincipal.add(persoCriacao, "CRIACAO");
+        // painelPrincipal.add(telaJogo, "JOGO");
+       
+
+      //  frame.add(painelPrincipal);
+
+      //  frame.setVisible(true);
+
+        // confirmarBtn.addActionListener(e -> {
+        //   //  String nomePersonagem = nome.getText();
+        //    // String classEscolhida = (String) cla.getSelectedItem();
+
+        //    // if (nomePersonagem.isEmpty()) {
+        //    //     JOptionPane.showMessageDialog(frame, "Insira um nome para o personagem.", "Erro",
+        //                 JOptionPane.ERROR_MESSAGE);
+        //         return;
+        //     }
+
+            // switch (classEscolhida) {
+            //     case "Guerreiro":
+            //         personagem = new Guerreiro(nomePersonagem);
+            //         break;
+            //     case "Arqueiro":
+            //         personagem = new Arqueiro(nomePersonagem);
+            //         break;
+            //     case "Mago":
+            //         personagem = new Mago(nomePersonagem);
+            //         break;
+            // }
+            mensagemApresentacao.setText(
+                    "<html><center><h1>JavaQuest</h1" + nomePersonagem + " o " + classEscolhida + "!</center><html>");
+            JOptionPane.showMessageDialog(frame,
+                    "Personagem Criado!\nNome: " + personagem.nome + "\nClasse: " + classEscolhida);
+            cardLayout.show(painelPrincipal, "JOGO");
+     //   });
+
+   // }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                criarGui();
+            }
+        });
     }
 }
+// String[] encontros = { "Conversar", "Comprar", "Caçar", "Explorar" };
+// Random random = new Random();
+
+// System.out.println("Seja Bem-vindo ao nosso RPG");
+// System.out.println("---------------------------");
+
+// System.out.println("Escolha Sua Classe");
+// System.out.println("Escolha Sua Classe:\n[1] Guerreiro\n[2] Arqueiro\n[3]
+// Mago\n");
+// int escolha = Integer.parseInt(System.console().readLine());
+
+// int controlador;
+// int intervalot = 0;
+// int intervalod = 0;
+// while (true) {
+// System.out.println("----- Controles -----");
+// System.out.println(
+// "\n [1] Sair\n [2] Descansar\n [3] Treinar\n [4] Eventos\n [5] Mostrar
+// Status\n [6] Inventário \n [7] presente misterioso");
+// System.out.println("---------------------");
+// controlador = Integer.parseInt(System.console().readLine());
+
+// switch (controlador) {
+// case 1:
+// return;
+// case 2:
+// if (intervalod == 0) {
+// System.out.println("Você descansa e se sente melhor");
+// personagem.vidaAtual = personagem.vidaAtual + 30;
+// if (personagem.vidaAtual > personagem.vidaMax) {
+// personagem.vidaAtual = personagem.vidaMax;
+// }
+// intervalod = intervalod + 3;
+// } else
+// System.out.println("Você ainda não pode descansar");
+// break;
+// case 3:
+// if (intervalot == 0) {
+// System.out.println("Você treina e se sente mais forte");
+// personagem.pontos = personagem.pontos + 3;
+// intervalot = intervalot + 3;
+// } else
+// System.out.println("Você ainda não pode treinar");
+// break;
+// case 4:
+// int aleatorio = random.nextInt(encontros.length);
+// String encontroPego = encontros[aleatorio];
+// System.out.println(encontroPego);
+// if (intervalod > 0) {
+// intervalod = intervalod - 1;
+// }
+// if (intervalot > 0) {
+// intervalot = intervalot - 1;
+// }
+// break;
+// case 5:
+// personagem.mostrarStatus();
+// break;
+// case 6:
+// personagem.mostrarInventario();
+// break;
+// case 7:
+// personagem.presente_misterioso();
+// break;
+// }
+// }
+
+// }
+// }
