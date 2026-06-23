@@ -2,7 +2,8 @@ package model;
 
 import Armas.Adaga;
 import Armas.Arco;
-
+import Armas.Arma.Raridade;
+import Armas.Espada;
 public class Arqueiro extends Classe {
     public Arqueiro(String nome) {
         this.nome = nome;
@@ -14,9 +15,10 @@ public class Arqueiro extends Classe {
         this.mana = 7;
         this.sorte = 13;
         this.inteligencia = 4;
-        this.armaEquipada = new Arco("Arco de Madeira", "Um arco feito de madeira durável.", 8, "Comum");
+        this.atributoPrincipal = "destreza"; 
+        this.armaEquipada = new Arco(4, "Arco de Madeira", "Um arco feito de madeira durável.", 8, Raridade.COMUM);
         this.inventario.add(this.armaEquipada);
         this.inventario.add(new Item("Flechas", "Flechas para um arco", 20));
-        this.inventario.add(new Adaga("Adaga Curta", "Uma adaga pequena e rápida.", 5, "Comum"));
+       this.inventario.add(new Adaga(5,"Adaga Curta", "Uma adaga pequena e rápida.", 5, Raridade.COMUM));
     }
 }

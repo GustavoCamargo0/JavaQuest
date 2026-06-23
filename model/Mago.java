@@ -1,5 +1,5 @@
 package model;
-
+import Armas.Arma.Raridade;
 import Armas.Catalisador;
 
 public class Mago extends Classe {
@@ -13,7 +13,8 @@ public class Mago extends Classe {
         this.mana = 15;
         this.sorte = 10;
         this.inteligencia = 10;
-        this.armaEquipada = new Catalisador("Livro Arcano velho", "Um livro contendo magias antigas.", 12, "Comum");
+        this.armaEquipada = new Catalisador(6,  "Livro Arcano velho", "Um livro contendo magias antigas.", 12, Raridade.COMUM);
+        this.atributoPrincipal = "inteligencia"; 
         this.inventario.add(this.armaEquipada);
     }
 }

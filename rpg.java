@@ -63,14 +63,30 @@ public class rpg {
         // TELA COMBATE 
 
         JPanel combate = new JPanel(new FlowLayout());
+        combate.add(new JLabel("Você entrou em combate"));
         JButton atacarBtn = new JButton("Atacar");
         JButton defenderBtn = new JButton("Defender");
+        JButton habilidadesBtn = new JButton("Habilidades");
         JButton correrBtn = new JButton("Correr");
         combate.add(atacarBtn);
         combate.add(defenderBtn);
+        combate.add(habilidadesBtn);
         combate.add(correrBtn);
         
+        atacarBtn.addActionListener(e -> {
+            personagem.ataque(personagem);
+        });
 
+        defenderBtn.addActionListener(e -> {
+        
+        });
+
+        habilidadesBtn.addActionListener(e -> {
+        
+        });
+        correrBtn.addActionListener(e -> {
+            cardLayout.show(painelPrincipal, "JOGO");
+        });
 
         // ---------------------------------------------------------------------------
 
@@ -78,14 +94,14 @@ public class rpg {
         JPanel telaJogo = new JPanel(new FlowLayout());
         String[] acoes = { "Descansar", "Treinar", "Eventos", "Mostrar Status", "Inventario" };
         JComboBox<String> acao = new JComboBox<>(acoes);
-        JButton confirmButton = new JButton("Confirmar");
+        JButton jogarButton = new JButton("Confirmar");
         telaJogo.add(acao);
-        telaJogo.add(confirmButton);
+        telaJogo.add(jogarButton);
         String[] encontros = { "Conversar", "Comprar", "Caçar", "Explorar", "Combate" };
         Random random = new Random();
 
         // LÓGICA DOS BOTÕES
-        confirmButton.addActionListener(e -> {
+        jogarButton.addActionListener(e -> {
             String acaoEscolhida = (String) acao.getSelectedItem();
             switch (acaoEscolhida) {
                 case "Descansar":
@@ -125,6 +141,7 @@ public class rpg {
                     int aleatorio = random.nextInt(encontros.length);
                     String encontroPego = encontros[aleatorio];
                     JOptionPane.showMessageDialog(frame, encontroPego);
+
                     switch (encontroPego) {
                         case "Combate":
                             cardLayout.show(painelPrincipal, "COMBATE");

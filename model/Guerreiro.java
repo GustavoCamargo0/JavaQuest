@@ -1,7 +1,6 @@
 package model;
-
+import Armas.Arma.Raridade;
 import Armas.Espada;
-
 public class Guerreiro extends Classe {
     public Guerreiro(String nome) {
         this.nome = nome;
@@ -13,7 +12,8 @@ public class Guerreiro extends Classe {
         this.mana = 5;
         this.sorte = 10;
         this.inteligencia = 3;
-        this.armaEquipada = new Espada("Espada De Ferro", "Uma espada feita de ferro.", 10, "Comum");
+        this.armaEquipada = new Espada(3, "Espada De Ferro", "Uma espada feita de ferro.", 10, Raridade.COMUM);
+        this.atributoPrincipal = "forca";
         this.inventario.add(this.armaEquipada);
     }
 }

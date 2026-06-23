@@ -20,17 +20,60 @@ public abstract class Classe {
     public int inteligencia;
     public int pontos;
     public Arma armaEquipada;
+    public String atributoPrincipal;
+    public boolean defendendo = false;
     public ArrayList<Item> inventario = new ArrayList<>();
 
-    public void presente_misterioso() {
+    public void ataque(Classe Inimigo) {
+        int atributo = 0;
         Random random = new Random();
-        int num = random.nextInt();
-        System.out.println(num);
-        if (num >= 50) {
-            System.out.println("parabens vc ganhou");
-        } else {
-            System.out.println("vc perdeu... quer os 2 reais");
+
+        switch (atributoPrincipal.toLowerCase()) {
+            case "forca":
+                atributo = forca;
+                break;
+            case "destreza":
+                atributo = destreza;
+                break;
+            case "inteligencia":
+                atributo = inteligencia;
+                break;
         }
+
+        int dano = armaEquipada.dano + (atributo * 2);
+
+        dano -= Inimigo.destreza / 2;
+
+
+        if (dano < 1) {
+            dano = 1;
+        }
+        
+        int critico = random.nextInt(100);
+
+        if (critico < sorte) {
+            dano *= 2;
+        }
+    
+        Inimigo.receberDano(dano);
+    }
+
+    public void receberDano(int dano) {
+
+        if (defendendo) {
+            dano /= 2;
+            defendendo = false;
+        }
+
+        vidaAtual -= dano;
+
+        if (vidaAtual < 0) {
+            vidaAtual = 0;
+        }
+    }
+
+    public void defender() {
+        defendendo = true;
     }
 
     public void mostrarStatus() {
