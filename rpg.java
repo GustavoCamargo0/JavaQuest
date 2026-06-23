@@ -239,6 +239,15 @@ class Mago extends Classe {
     }
 }
 
+class Inimigo {
+    String nome;
+    int dano;
+    int vidaMax;
+    int vidaAtual;
+    int nivel;
+  
+}
+
 class Item {
     String nome;
     String descricao;
@@ -360,6 +369,19 @@ public class rpg {
         // TELA INVENTARIO
 
         // ---------------------------------------------------------------------------
+        // TELA COMBATE 
+
+        JPanel combate = new JPanel(new FlowLayout());
+        JButton atacarBtn = new JButton("Atacar");
+        JButton defenderBtn = new JButton("Defender");
+        JButton correrBtn = new JButton("Correr");
+        combate.add(atacarBtn);
+        combate.add(defenderBtn);
+        combate.add(correrBtn);
+        
+
+
+        // ---------------------------------------------------------------------------
         // TELA PRINCIPAL
         JPanel telaJogo = new JPanel(new FlowLayout());
         String[] acoes = { "Descansar", "Treinar", "Eventos", "Mostrar Status", "Inventario" };
@@ -367,7 +389,7 @@ public class rpg {
         JButton confirmButton = new JButton("Confirmar");
         telaJogo.add(acao);
         telaJogo.add(confirmButton);
-        String[] encontros = { "Conversar", "Comprar", "Caçar", "Explorar" };
+        String[] encontros = { "Conversar", "Comprar", "Caçar", "Explorar", "Combate" };
         Random random = new Random();
 
         // LÓGICA DOS BOTÕES
@@ -411,6 +433,12 @@ public class rpg {
                     int aleatorio = random.nextInt(encontros.length);
                     String encontroPego = encontros[aleatorio];
                     JOptionPane.showMessageDialog(frame, encontroPego);
+                    switch (encontroPego) {
+                        case "Combate":
+                            cardLayout.show(painelPrincipal, "COMBATE");
+                            break;
+                    }
+                 
                     if (intervalod > 0) {
                         intervalod = intervalod - 1;
                     }
@@ -430,6 +458,7 @@ public class rpg {
         painelPrincipal.add(persoCriacao, "CRIACAO");
         painelPrincipal.add(telaJogo, "JOGO");
         painelPrincipal.add(telaInventario, "INVENTARIO");
+        painelPrincipal.add(combate, "COMBATE");
 
         frame.add(painelPrincipal);
         frame.setVisible(true);
